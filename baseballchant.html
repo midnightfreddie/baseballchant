@@ -16,13 +16,13 @@
 <body ng-controller="Chant as chant">
   <div class="chant" ng-show="chant.index < 8">
     <div ng-class="{ 'hidden': chant.index < 0 }">
-      {{ chant.words[0] }}
+      {{ chant.a }}
     </div>
     <div ng-class="{ 'hidden': chant.index < 2 }">
-      {{ chant.words[1] }}
+      {{ chant.b }}
     </div>
     <div>
-      <span ng-class="{ 'hidden': chant.index < 4 }">{{ chant.words[2] }}</span><span ng-class="{ 'hidden': chant.index < 6 }">{{ chant.words[3] }}</span>
+      <span ng-class="{ 'hidden': chant.index < 4 }">{{ chant.c }}</span><span ng-class="{ 'hidden': chant.index < 6 }">{{ chant.d }}</span>
     </div>
   </div>
   <div class="chant"  ng-show="chant.index >= 8">
@@ -47,14 +47,20 @@
         .module('baseballChant', [])
         .controller('Chant', Chant);
 
-      Chant.$inject = ['$interval'];
+      Chant.$inject = ['$interval', '$location'];
 
-      function Chant($interval) {
+      function Chant($interval, $location) {
         var vm = this;
         vm.promise = null;
 
         vm.words = ["Let's", "Go", "Ran", "gers"];
         vm.index = 0;
+        vm.params = $location.search();
+        vm.a = vm.params.a || "Let's";
+        vm.b = vm.params.b || "Go";
+        vm.c = vm.params.c || "Ran";
+        vm.d = vm.params.d || "gers";
+
 
         vm.NextWord = function() {
           if (++vm.index >= 16) vm.index = 0;
