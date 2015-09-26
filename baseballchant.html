@@ -7,13 +7,20 @@
     .chant {
       font-family: sans-serif;
       font-size: 20vmin;
+      font-weight: bolder;
       text-align: center;
       height: 100%;
       width: 100%;
+      color: white;
+      text-shadow:
+        -1px -1px 2px #000,
+         1px -1px 2px #000,
+        -1px  1px 2px #000,
+         1px  1px 2px #000;
     }
   </style>
 </head>
-<body ng-controller="Chant as chant">
+<body ng-controller="Chant as chant" ng-attr-style = "background-color: {{ chant.bg }}">
   <div class="chant" ng-show="chant.beat < 8">
     <div ng-class="{ 'hidden': chant.beat < 0 }">
       {{ chant.a }}
@@ -59,6 +66,8 @@
         vm.b = vm.params.b || "Go";
         vm.c = vm.params.c || "Ran";
         vm.d = vm.params.d || "gers";
+        vm.bg = vm.params.bg || "#003279";
+        vm.beat = parseInt(vm.params.beat) || 200;
 
 
         vm.NextWord = function() {
@@ -67,7 +76,7 @@
 
         vm.StartInterval = function() {
           vm.StopInterval();
-          vm.promise = $interval(vm.NextWord, 250)
+          vm.promise = $interval(vm.NextWord, vm.beat)
         }
 
         vm.StopInterval = function() {
