@@ -5,6 +5,9 @@
 </head>
 <body ng-controller="Chant as chant">
   <div>
+    {{ chant.index }}
+  </div>
+  <div>
     {{ chant.words[chant.index]}}
   </div>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
@@ -20,11 +23,25 @@
 
       function Chant($interval) {
         var vm = this;
-        var promise;
+        vm.promise = null;
 
         vm.words = ["Let's", "Go", "Ran", "gers"];
         vm.index = 0;
 
+        vm.NextWord = function() {
+          if (++vm.index >= vm.words.length) vm.index = 0;
+        }
+
+        vm.StartInterval = function() {
+          vm.StopInterval();
+          vm.promise = $interval(vm.NextWord, 500)
+        }
+
+        vm.StopInterval = function() {
+          if (vm.promise) vm.promise.cancel();
+        }
+
+        vm.StartInterval();
       }
     })();
   </script>
