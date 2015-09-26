@@ -2,13 +2,41 @@
 <html ng-app="baseballChant">
 <head>
   <title>Baseball Chant</title>
+  <style>
+    .hidden { visibility: hidden; }
+    .chant {
+      font-family: sans-serif;
+      font-size: 20vmin;
+      text-align: center;
+      height: 100%;
+      width: 100%;
+    }
+  </style>
 </head>
 <body ng-controller="Chant as chant">
-  <div>
-    {{ chant.index }}
+  <div class="chant" ng-show="chant.index < 8">
+    <div ng-class="{ 'hidden': chant.index < 0 }">
+      {{ chant.words[0] }}
+    </div>
+    <div ng-class="{ 'hidden': chant.index < 2 }">
+      {{ chant.words[1] }}
+    </div>
+    <div>
+      <span ng-class="{ 'hidden': chant.index < 4 }">{{ chant.words[2] }}</span><span ng-class="{ 'hidden': chant.index < 6 }">{{ chant.words[3] }}</span>
+    </div>
   </div>
-  <div>
-    {{ chant.words[chant.index]}}
+  <div class="chant"  ng-show="chant.index >= 8">
+    <div ng-class="{ 'hidden': chant.index < 8 }">
+      CLAP
+    </div>
+    <div>
+      <span ng-class="{ 'hidden': chant.index < 12 }">CLAP</span>
+      <span ng-class="{ 'hidden': chant.index < 13 }">CLAP</span>
+      <span ng-class="{ 'hidden': chant.index < 14 }">CLAP</span>
+    </div>
+    <div ng-class="{ 'hidden': chant.index < 10 }">
+      CLAP
+    </div>
   </div>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
   <script>
@@ -29,12 +57,12 @@
         vm.index = 0;
 
         vm.NextWord = function() {
-          if (++vm.index >= vm.words.length) vm.index = 0;
+          if (++vm.index >= 16) vm.index = 0;
         }
 
         vm.StartInterval = function() {
           vm.StopInterval();
-          vm.promise = $interval(vm.NextWord, 500)
+          vm.promise = $interval(vm.NextWord, 250)
         }
 
         vm.StopInterval = function() {
