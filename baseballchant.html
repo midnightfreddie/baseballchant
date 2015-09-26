@@ -14,27 +14,27 @@
   </style>
 </head>
 <body ng-controller="Chant as chant">
-  <div class="chant" ng-show="chant.index < 8">
-    <div ng-class="{ 'hidden': chant.index < 0 }">
+  <div class="chant" ng-show="chant.beat < 8">
+    <div ng-class="{ 'hidden': chant.beat < 0 }">
       {{ chant.a }}
     </div>
-    <div ng-class="{ 'hidden': chant.index < 2 }">
+    <div ng-class="{ 'hidden': chant.beat < 2 }">
       {{ chant.b }}
     </div>
     <div>
-      <span ng-class="{ 'hidden': chant.index < 4 }">{{ chant.c }}</span><span ng-class="{ 'hidden': chant.index < 6 }">{{ chant.d }}</span>
+      <span ng-class="{ 'hidden': chant.beat < 4 }">{{ chant.c }}</span><span ng-class="{ 'hidden': chant.beat < 6 }">{{ chant.d }}</span>
     </div>
   </div>
-  <div class="chant"  ng-show="chant.index >= 8">
-    <div ng-class="{ 'hidden': chant.index < 8 }">
+  <div class="chant"  ng-show="chant.beat >= 8">
+    <div ng-class="{ 'hidden': chant.beat < 8 }">
       CLAP
     </div>
     <div>
-      <span ng-class="{ 'hidden': chant.index < 12 }">CLAP</span>
-      <span ng-class="{ 'hidden': chant.index < 13 }">CLAP</span>
-      <span ng-class="{ 'hidden': chant.index < 14 }">CLAP</span>
+      <span ng-class="{ 'hidden': chant.beat < 12 }">CLAP</span>
+      <span ng-class="{ 'hidden': chant.beat < 13 }">CLAP</span>
+      <span ng-class="{ 'hidden': chant.beat < 14 }">CLAP</span>
     </div>
-    <div ng-class="{ 'hidden': chant.index < 10 }">
+    <div ng-class="{ 'hidden': chant.beat < 10 }">
       CLAP
     </div>
   </div>
@@ -53,8 +53,7 @@
         var vm = this;
         vm.promise = null;
 
-        vm.words = ["Let's", "Go", "Ran", "gers"];
-        vm.index = 0;
+        vm.beat = 0;
         vm.params = $location.search();
         vm.a = vm.params.a || "Let's";
         vm.b = vm.params.b || "Go";
@@ -63,7 +62,7 @@
 
 
         vm.NextWord = function() {
-          if (++vm.index >= 16) vm.index = 0;
+          if (++vm.beat >= 16) vm.beat = 0;
         }
 
         vm.StartInterval = function() {
