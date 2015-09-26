@@ -6,12 +6,14 @@
     .hidden { visibility: hidden; }
     .chant {
       font-family: sans-serif;
+      /* Font size depends on viewport size */
       font-size: 20vmin;
       font-weight: bolder;
       text-align: center;
       height: 100%;
       width: 100%;
       color: white;
+      /* Using 4 shadow offsets to simulate text outline */
       text-shadow:
         -1px -1px 2px #000,
          1px -1px 2px #000,
@@ -59,8 +61,9 @@
       function Chant($interval, $location) {
         var vm = this;
         vm.promise = null;
-
         vm.beat = 0;
+
+        // Grab values from url parameters if present
         vm.params = $location.search();
         vm.a = vm.params.a || "Let's";
         vm.b = vm.params.b || "Go";
@@ -69,20 +72,21 @@
         vm.bg = vm.params.bg || "#003279";
         vm.beat = parseInt(vm.params.beat) || 200;
 
-
-        vm.NextWord = function() {
+        // Advance beat count
+        vm.NextBeat = function() {
           if (++vm.beat >= 16) vm.beat = 0;
         }
 
         vm.StartInterval = function() {
           vm.StopInterval();
-          vm.promise = $interval(vm.NextWord, vm.beat)
+          vm.promise = $interval(vm.NextBeat, vm.beat)
         }
 
         vm.StopInterval = function() {
           if (vm.promise) vm.promise.cancel();
         }
 
+        // Start the beat!
         vm.StartInterval();
       }
     })();
