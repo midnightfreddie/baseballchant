@@ -1,0 +1,29 @@
+<!doctype html>
+<html>
+  <title>Baseball Chant</title>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+<head>
+</head>
+<body>
+  <script>
+    (function() {
+      'use strict';
+
+      angular
+        .module('baseballChant', '[]')
+        .controller('Chant', Chant);
+
+      Chant.$inject = ['$interval'];
+
+      function Chant($interval) {
+        var vm = this;
+        var promise;
+
+        vm.words = ["Let's", "Go", "Ran", "gers"];
+        vm.index = 0;
+        
+      }
+    })();
+  </script>
+</body>
+</html>
