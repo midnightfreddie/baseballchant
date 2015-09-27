@@ -3,6 +3,9 @@
 <head>
   <title>Baseball Chant</title>
   <style>
+    .settings {
+      background-color: white;
+    }
     .hidden { visibility: hidden; }
     .chant {
       font-family: sans-serif;
@@ -23,48 +26,70 @@
   </style>
 </head>
 <body ng-controller="Chant as chant" ng-attr-style = "background-color: {{ chant.bg }}">
-  <div class="chant" ng-show="chant.beat < 8">
-    <div ng-class="{ 'hidden': chant.beat < 0 }">
+  <div ng-if="chant.settings" ng-class="'settings'">
+    <h2>Settings</h2>
+    <div>
+      Words/parts:
+      <input type="text" name="userName" ng-model="chant.a"></input>
+      <input type="text" name="userName" ng-model="chant.b"></input>
+      <input type="text" name="userName" ng-model="chant.c"></input>
+      <input type="text" name="userName" ng-model="chant.d"></input>
+      <input type="text" name="userName" ng-model="chant.e"></input>
+    </div>
+    <div>
+      <input type="text" name="userName" ng-model="chant.beat"></input> Half-beat length in milliseconds
+      <button ng-click="chant.StartInterval()">Restart Beat</button>
+    </div>
+    <div>
+      <input type="text" name="userName" ng-model="chant.bg"></input> Background CSS color code
+    </div>
+    <div>
+      <h3>Link for the above settings</h3>
+      <a href="{{ chant.FullUrl() }}">{{ chant.FullUrl() }}</a>
+      <div>Copy link or open in a new tab/window. Or you can refresh page after clicking, but settings options will disappear.</div>
+    </div>
+  </div>
+  <div class="chant" ng-show="chant.currentBeat < 8">
+    <div ng-class="{ 'hidden': chant.currentBeat < 0 }">
       {{ chant.a }}
     </div>
-    <div ng-class="{ 'hidden': chant.beat < 2 || chant.beat > 8 }">
+    <div ng-class="{ 'hidden': chant.currentBeat < 2 || chant.currentBeat > 8 }">
       {{ chant.b }}
     </div>
     <div>
-      <span ng-class="{ 'hidden': chant.beat < 4 || chant.beat > 8 }">{{ chant.c }}</span><span ng-class="{ 'hidden': chant.beat < 6 || chant.beat > 8 }">{{ chant.d }}</span>
+      <span ng-class="{ 'hidden': chant.currentBeat < 4 || chant.currentBeat > 8 }">{{ chant.c }}</span><span ng-class="{ 'hidden': chant.currentBeat < 6 || chant.currentBeat > 8 }">{{ chant.d }}</span>
     </div>
   </div>
-  <div class="chant"  ng-show="chant.beat >= 8 && chant.beat < 12">
-    <div ng-class="{ 'hidden': chant.beat < 8 }">
+  <div class="chant"  ng-show="chant.currentBeat >= 8 && chant.currentBeat < 12">
+    <div ng-class="{ 'hidden': chant.currentBeat < 8 }">
       &nbsp;
     </div>
     <div>
-      <span ng-class="{ 'hidden': chant.beat < 8 }">CLAP</span>
-      <span ng-class="{ 'hidden': chant.beat < 10 }">CLAP</span>
+      <span ng-class="{ 'hidden': chant.currentBeat < 8 }">{{ chant.e }}</span>
+      <span ng-class="{ 'hidden': chant.currentBeat < 10 }">{{ chant.e }}</span>
     </div>
-    <div ng-class="{ 'hidden': chant.beat < 10 }">
+    <div ng-class="{ 'hidden': chant.currentBeat < 10 }">
       &nbsp;
     </div>
   </div>
-  <div class="chant" ng-show="chant.beat >= 12">
-    <div ng-class="{ 'hidden': chant.beat < 12 }">
-      CLAP
+  <div class="chant" ng-show="chant.currentBeat >= 12">
+    <div ng-class="{ 'hidden': chant.currentBeat < 12 }">
+      {{ chant.e }}
     </div>
-    <div ng-class="{ 'hidden': chant.beat < 13 }">
-      CLAP
+    <div ng-class="{ 'hidden': chant.currentBeat < 13 }">
+      {{ chant.e }}
     </div>
-    <div ng-class="{ 'hidden': chant.beat < 14 }">
-      CLAP
+    <div ng-class="{ 'hidden': chant.currentBeat < 14 }">
+      {{ chant.e }}
     </div>
   </div>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-animate.js"></script>
   <script>
     (function() {
       'use strict';
 
       angular
-        .module('baseballChant', ['ngAnimate'])
+        .module('baseballChant', [])
         .controller('Chant', Chant);
 
       Chant.$inject = ['$interval', '$location'];
@@ -72,7 +97,7 @@
       function Chant($interval, $location) {
         var vm = this;
         vm.promise = null;
-        vm.beat = 0;
+        vm.currentBeat = 0;
 
         // Grab values from url parameters if present
         vm.params = $location.search();
@@ -80,12 +105,14 @@
         vm.b = vm.params.b || "Go";
         vm.c = vm.params.c || "Ran";
         vm.d = vm.params.d || "gers";
+        vm.e = vm.params.e || "CLAP";
         vm.bg = vm.params.bg || "#003279";
         vm.beat = parseInt(vm.params.beat) || 200;
+        vm.settings = vm.params.settings || false;
 
         // Advance beat count
         vm.NextBeat = function() {
-          if (++vm.beat >= 16) vm.beat = 0;
+          if (++vm.currentBeat >= 16) vm.currentBeat = 0;
         }
 
         vm.StartInterval = function() {
@@ -94,7 +121,24 @@
         }
 
         vm.StopInterval = function() {
-          if (vm.promise) vm.promise.cancel();
+          $interval.cancel(vm.promise);
+        }
+
+        vm.FullUrl = function() {
+          return vm.BaseUrl()
+            + '#?a=' + encodeURIComponent(vm.a)
+            + '&b=' + encodeURIComponent(vm.b)
+            + '&c=' + encodeURIComponent(vm.c)
+            + '&d=' + encodeURIComponent(vm.d)
+            + '&e=' + encodeURIComponent(vm.e)
+            + '&bg=' + encodeURIComponent(vm.bg)
+            + '&beat=' + encodeURIComponent(vm.beat);
+        }
+
+        // Returns the base file url
+        vm.BaseUrl = function() {
+          var pattern = /[#?]/
+          return $location.absUrl().split(pattern, 1)[0];
         }
 
         // Start the beat!
