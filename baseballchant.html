@@ -27,11 +27,11 @@
     <div ng-class="{ 'hidden': chant.beat < 0 }">
       {{ chant.a }}
     </div>
-    <div ng-class="{ 'hidden': chant.beat < 2 }">
+    <div ng-class="{ 'hidden': chant.beat < 2 || chant.beat > 8 }">
       {{ chant.b }}
     </div>
     <div>
-      <span ng-class="{ 'hidden': chant.beat < 4 }">{{ chant.c }}</span><span ng-class="{ 'hidden': chant.beat < 6 }">{{ chant.d }}</span>
+      <span ng-class="{ 'hidden': chant.beat < 4 || chant.beat > 8 }">{{ chant.c }}</span><span ng-class="{ 'hidden': chant.beat < 6 || chant.beat > 8 }">{{ chant.d }}</span>
     </div>
   </div>
   <div class="chant"  ng-show="chant.beat >= 8 && chant.beat < 12">
@@ -58,12 +58,13 @@
     </div>
   </div>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular-animate.js"></script>
   <script>
     (function() {
       'use strict';
 
       angular
-        .module('baseballChant', [])
+        .module('baseballChant', ['ngAnimate'])
         .controller('Chant', Chant);
 
       Chant.$inject = ['$interval', '$location'];
