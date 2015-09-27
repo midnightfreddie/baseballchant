@@ -20,5 +20,5 @@ http://midnightfreddie.github.io/baseballchant/baseballchant.html#?a=%23%25%24%2
 ## Future Ideas
 
 - Make it easier to change the parameters.
-- Auto size the text to be as big as possible without wrapping the "CLAP CLAP CLAP" line.
 - Figure out how to take the logic out of the controller and put it in services or factories or whatever Agnulary things they should be in.
+- Animate the words

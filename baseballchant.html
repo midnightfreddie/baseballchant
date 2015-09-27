@@ -7,7 +7,7 @@
     .chant {
       font-family: sans-serif;
       /* Font size depends on viewport size */
-      font-size: 20vmin;
+      font-size: 25vmin;
       font-weight: bolder;
       text-align: center;
       height: 100%;
@@ -34,16 +34,26 @@
       <span ng-class="{ 'hidden': chant.beat < 4 }">{{ chant.c }}</span><span ng-class="{ 'hidden': chant.beat < 6 }">{{ chant.d }}</span>
     </div>
   </div>
-  <div class="chant"  ng-show="chant.beat >= 8">
+  <div class="chant"  ng-show="chant.beat >= 8 && chant.beat < 12">
     <div ng-class="{ 'hidden': chant.beat < 8 }">
-      CLAP
+      &nbsp;
     </div>
     <div>
-      <span ng-class="{ 'hidden': chant.beat < 12 }">CLAP</span>
-      <span ng-class="{ 'hidden': chant.beat < 13 }">CLAP</span>
-      <span ng-class="{ 'hidden': chant.beat < 14 }">CLAP</span>
+      <span ng-class="{ 'hidden': chant.beat < 8 }">CLAP</span>
+      <span ng-class="{ 'hidden': chant.beat < 10 }">CLAP</span>
     </div>
     <div ng-class="{ 'hidden': chant.beat < 10 }">
+      &nbsp;
+    </div>
+  </div>
+  <div class="chant" ng-show="chant.beat >= 12">
+    <div ng-class="{ 'hidden': chant.beat < 12 }">
+      CLAP
+    </div>
+    <div ng-class="{ 'hidden': chant.beat < 13 }">
+      CLAP
+    </div>
+    <div ng-class="{ 'hidden': chant.beat < 14 }">
       CLAP
     </div>
   </div>
