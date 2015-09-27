@@ -2,6 +2,7 @@
 <html ng-app="baseballChant">
 <head>
   <title>Baseball Chant</title>
+  <link rel="stylesheet" href="colorpicker/colorpicker.min.css" type="text/css">
   <style>
     .settings {
       background-color: white;
@@ -41,7 +42,7 @@
       <button ng-click="chant.StartInterval()">Restart Beat</button>
     </div>
     <div>
-      <input type="text" name="userName" ng-model="chant.bg"></input> Background CSS color code
+      <input colorpicker="hex" type="text" name="userName" ng-model="chant.bg"></input> Background CSS color code
     </div>
     <div>
       <h3>Link for the above settings</h3>
@@ -83,13 +84,14 @@
       {{ chant.e }}
     </div>
   </div>
-  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
+  <script src="colorpicker/bootstrap-colorpicker-module.min.js"></script>
   <script>
     (function() {
       'use strict';
 
       angular
-        .module('baseballChant', [])
+        .module('baseballChant', ['colorpicker.module'])
         .controller('Chant', Chant);
 
       Chant.$inject = ['$interval', '$location'];
