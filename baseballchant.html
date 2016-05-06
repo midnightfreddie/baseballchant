@@ -32,18 +32,21 @@
     <h2>Settings</h2>
     <div>
       Words/parts:
-      <input type="text" name="userName" ng-model="chant.a"></input>
-      <input type="text" name="userName" ng-model="chant.b"></input>
-      <input type="text" name="userName" ng-model="chant.c"></input>
-      <input type="text" name="userName" ng-model="chant.d"></input>
-      <input type="text" name="userName" ng-model="chant.e"></input>
+      <input type="text" name="firstWord" ng-model="chant.a"></input>
+      <input type="text" name="secondWord" ng-model="chant.b"></input>
+      <input type="text" name="thirdWordFirstHalf" ng-model="chant.c"></input>
+      <input type="text" name="thirdWordSecondHalf" ng-model="chant.d"></input>
+      <input type="text" name="fourthWord" ng-model="chant.e"></input>
     </div>
     <div>
       <input type="text" name="userName" ng-model="chant.beat"></input> Half-beat length in milliseconds
       <button ng-click="chant.StartInterval()">Restart Beat</button>
     </div>
     <div>
-      <input colorpicker="hex" type="text" name="userName" ng-model="chant.bg"></input> Background CSS color code
+      <input colorpicker="hex" type="text" name="backgroundColor" ng-model="chant.bg"></input> Background CSS color code
+    </div>
+    <div>
+      <input type="checkbox" name="Zalgo" ng-model="chant.zalgo" ng-change="chant.RefreshWords()"></input> Zalgo He Comes
     </div>
     <div>
       <h3>Link for the above settings</h3>
@@ -103,8 +106,6 @@
         vm.promise = null;
         vm.currentBeat = 0;
 
-        String.prototype.zalgo = zalgo("hi", 4, 8, 1)
-
         // Grab values from url parameters if present
         vm.params = $location.search();
         vm.zalgo = vm.params.zalgo || false;
@@ -142,7 +143,8 @@
             + '&d=' + encodeURIComponent(vm.d)
             + '&e=' + encodeURIComponent(vm.e)
             + '&bg=' + encodeURIComponent(vm.bg)
-            + '&beat=' + encodeURIComponent(vm.beat);
+            + '&beat=' + encodeURIComponent(vm.beat)
+            + (vm.zalgo ? '&zalgo' : '');
         }
 
         // Returns the base file url
