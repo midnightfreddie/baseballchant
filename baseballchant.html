@@ -1,5 +1,5 @@
 <!doctype html>
-<html ng-app="baseballChant">
+<html ng-app="baseballChant" ng-controller="Chant as chant">
 <head>
   <title>Baseball Chant</title>
   <link rel="stylesheet" href="colorpicker/colorpicker.min.css" type="text/css">
@@ -16,7 +16,8 @@
       text-align: center;
       height: 100%;
       width: 100%;
-      color: white;
+      /* FIXME: The following line is messing up my Atom script highlighting */
+      color: {{ chant.zalgo ? "black" : "white" }};
       /* Using 4 shadow offsets to simulate text outline */
       text-shadow:
         -1px -1px 2px #000,
@@ -26,7 +27,7 @@
     }
   </style>
 </head>
-<body ng-controller="Chant as chant" ng-attr-style = "background-color: {{ chant.bg }}">
+<body ng-attr-style = "background-color: {{ chant.bg }}">
   <div ng-if="chant.settings" ng-class="'settings'">
     <h2>Settings</h2>
     <div>
@@ -52,13 +53,13 @@
   </div>
   <div class="chant" ng-show="chant.currentBeat < 8">
     <div ng-class="{ 'hidden': chant.currentBeat < 0 }">
-      {{ chant.a }}
+      {{ chant.za }}
     </div>
     <div ng-class="{ 'hidden': chant.currentBeat < 2 || chant.currentBeat > 8 }">
-      {{ chant.b }}
+      {{ chant.zb }}
     </div>
     <div>
-      <span ng-class="{ 'hidden': chant.currentBeat < 4 || chant.currentBeat > 8 }">{{ chant.c }}</span><span ng-class="{ 'hidden': chant.currentBeat < 6 || chant.currentBeat > 8 }">{{ chant.d }}</span>
+      <span ng-class="{ 'hidden': chant.currentBeat < 4 || chant.currentBeat > 8 }">{{ chant.zc }}</span><span ng-class="{ 'hidden': chant.currentBeat < 6 || chant.currentBeat > 8 }">{{ chant.zd }}</span>
     </div>
   </div>
   <div class="chant"  ng-show="chant.currentBeat >= 8 && chant.currentBeat < 12">
@@ -66,8 +67,8 @@
       &nbsp;
     </div>
     <div>
-      <span ng-class="{ 'hidden': chant.currentBeat < 8 }">{{ chant.e }}</span>
-      <span ng-class="{ 'hidden': chant.currentBeat < 10 }">{{ chant.e }}</span>
+      <span ng-class="{ 'hidden': chant.currentBeat < 8 }">{{ chant.ze }}</span>
+      <span ng-class="{ 'hidden': chant.currentBeat < 10 }">{{ chant.zf }}</span>
     </div>
     <div ng-class="{ 'hidden': chant.currentBeat < 10 }">
       &nbsp;
@@ -75,17 +76,18 @@
   </div>
   <div class="chant" ng-show="chant.currentBeat >= 12">
     <div ng-class="{ 'hidden': chant.currentBeat < 12 }">
-      {{ chant.e }}
+      {{ chant.zg }}
     </div>
     <div ng-class="{ 'hidden': chant.currentBeat < 13 }">
-      {{ chant.e }}
+      {{ chant.zh }}
     </div>
     <div ng-class="{ 'hidden': chant.currentBeat < 14 }">
-      {{ chant.e }}
+      {{ chant.zi }}
     </div>
   </div>
   <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.4.5/angular.min.js"></script>
   <script src="colorpicker/bootstrap-colorpicker-module.min.js"></script>
+  <script src="zalgo/zalgo.js"></script>
   <script>
     (function() {
       'use strict';
@@ -101,8 +103,11 @@
         vm.promise = null;
         vm.currentBeat = 0;
 
+        String.prototype.zalgo = zalgo("hi", 4, 8, 1)
+
         // Grab values from url parameters if present
         vm.params = $location.search();
+        vm.zalgo = vm.params.zalgo || false;
         vm.a = vm.params.a || "Let's";
         vm.b = vm.params.b || "Go";
         vm.c = vm.params.c || "Ran";
@@ -114,7 +119,10 @@
 
         // Advance beat count
         vm.NextBeat = function() {
-          if (++vm.currentBeat >= 16) vm.currentBeat = 0;
+          if (++vm.currentBeat >= 16) {
+            vm.RefreshWords();
+            vm.currentBeat = 0;
+          }
         }
 
         vm.StartInterval = function() {
@@ -142,6 +150,25 @@
           var pattern = /[#?]/
           return $location.absUrl().split(pattern, 1)[0];
         }
+
+        vm.Zalgo = function(myString) {
+          return vm.zalgo ? zalgo(myString, 4, 8, 2) : myString;
+        }
+
+        vm.RefreshWords = function() {
+          vm.za = vm.Zalgo(vm.a);
+          vm.zb = vm.Zalgo(vm.b);
+          vm.zc = vm.Zalgo(vm.c);
+          vm.zd = vm.Zalgo(vm.d);
+          vm.ze = vm.Zalgo(vm.e);
+          vm.zf = vm.Zalgo(vm.e);
+          vm.zg = vm.zalgo ? vm.Zalgo("Zalgo") : vm.e;
+          vm.zh = vm.zalgo ? vm.Zalgo("He") : vm.e;
+          vm.zi = vm.zalgo ? vm.Zalgo("Comes") : vm.e;
+        }
+
+        // Init display vars
+        vm.RefreshWords();
 
         // Start the beat!
         vm.StartInterval();
